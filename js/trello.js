@@ -33,7 +33,6 @@ function getlists(){
     Trello.get("boards/" + board + "/lists", function(lists) {
         $.each(lists, function(ix, lists) {
             $(new Option(lists.name, lists.id)).appendTo("#lists_list");
-            console.log(lists.name, lists.id);
         });
     });
 };
