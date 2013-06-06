@@ -1,9 +1,10 @@
 
 .popup {
-    min-width:357px;
-    overflow-x:hidden;
+    min-width:285px;
+    overflow:hidden;
+    text-align: center;
+    margin: 0 auto;
 }
-
 
 #output {
     padding: 4px;

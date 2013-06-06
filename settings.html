@@ -30,20 +30,22 @@
         <div id="success" style="display: none;" class="alert alert-success">
             <span class="checkmark">&#x2713;</span>
             <strong>Thanks!</strong> You've successfully authorised Bugs 2 Trello
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
         </div>
         <div id="error" style="display: none;">
             <h1>Uh oh.</h1>
             <p>Looks like something has gone wrong authorising you with Trello.</p>
             <p>Please try checking your Internet connection, restarting your browser and re-installing this extension.</p>
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
         </div>
 
         <div id="loggedout" class="well">
-          <a id="connect" href="#">Connect To Trello</a>
+          <a id="connect" href="#" class="btn-link">Connect To Trello</a>
         </div>
 
         <div id="loggedin" class="well">
               Logged in to Trello as <span id="fullName"></span> -- 
-              <a id="disconnect" href="#">Log Out</a>
+              <a id="disconnect" href="#" class="btn-link">Log Out</a>
         </div>
 
     </div>

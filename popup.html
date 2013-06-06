@@ -12,32 +12,42 @@
 
   <body>
 
-<div class="popup">
+    <div id="wrap">
 
-    <div id="loggedout" class='well'>
-      <a id="connect" href="#">Connect To Trello</a>
+    <div class="popup container span3">
+    <h2>Bug 2 Trello</h2>
+
+    <div id="selects">
+        <select id='board_list'>
+          <option>Select a board</option>
+        </select>
+        <br>
+        <select id='lists_list'>
+          <option>Select a list</option>
+        </select>
+    </div>
+    <br>
+    <div id="add-button">
+        <button id="add-bug" type="button" class="btn btn-large disabled">
+        <span class="add-on"><i class="icon-plus-sign"></i></span>
+        Add to Trello</button>
     </div>
 
-    <div id="loggedin" class='well'>
-      <div id="header">
-          Logged in to Trello as <span id="fullName"></span> 
-          <a id="disconnect" href="#">Log Out</a>
-      </div>
+    <div id="push"></div>
+    </div>
     </div>
 
+    <div id="footer">
+    <div id="loggedout" class="pull-right">
+      <a id="connect" class="btn-small" href="#">Connect To Trello</a>
+    </div>
 
-    <select id='board_list'>
-      <option>Select a board</option>
-    </select>
+    <div id="loggedin" class="pull-right">
+          <a id="disconnect" class="btn-small" href="#">Log Out</a>
+    </div>
 
-    <select id='lists_list'>
-      <option>Select a list</option>
-    </select>
-
-    <button id="add-bug" type="button" class="btn btn-large disabled">Add to Trello</button>
-
-<div>
-
+    </div>
+    </div>
   </body>
 
 </html>
