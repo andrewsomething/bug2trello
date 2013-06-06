@@ -1,27 +1,40 @@
-body {
+
+.popup {
     min-width:357px;
-    background: #E6E6E6;
     overflow-x:hidden;
 }
 
-.addLink {
-    display: none;
-    font-size: 65%
-}
-
-#header {
-    border-bottom: 1px solid #000;
-    font-size: 80%
-}
 
 #output {
     padding: 4px;
 }
 
-.hidden {
-    display: none;
+
+/* Sticky footer styles
+http://twitter.github.io/bootstrap/examples/sticky-footer.html
+*/
+
+html,
+body {
+    height: 100%;
+/* The html and body elements cannot have any padding or margin. */
 }
 
-.shown {
-    display: block;
+/* Wrapper for page content to push down footer */
+#wrap {
+min-height: 100%;
+height: auto !important;
+height: 100%;
+/* Negative indent footer by it's height */
+    margin: 0 auto -60px;
 }
+
+/* Set the fixed height of the footer here */
+#push,
+#footer {
+    height: 60px;
+}
+#footer {
+    background-color: #f5f5f5;
+}
+

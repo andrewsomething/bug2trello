@@ -1,20 +1,67 @@
-<html>
-<head>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Bugs 2 Trello</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="About page">
+    <meta name="author" content="Andrew Starr-Bochicchio">
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.0/jquery.min.js"></script>
     <script src="https://api.trello.com/1/client.js?key=7ef8f6a93120e0f5411093164e59ef1d"></script>
+    <script type="text/javascript" src="js/bootstrap.min.js"></script>
     <script type="text/javascript" src="js/settings.js"></script>
-        <link rel="stylesheet" href="css/base.css" type="text/css" />
-</head>
+
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/base.css" >
+
+    <!-- Fav and touch icons -->
+    <link rel="shortcut icon" href="ico/favicon.png">
+  </head>
 
   <body>
-    <div id="loggedout">
-      <a id="connect" href="#">Connect To Trello</a>
+
+    <div id="wrap">
+
+    <div class="container">
+
+        <h1> Bugs 2 Trello</h2>
+
+        <div id="success" style="display: none;" class="alert alert-success">
+            <span class="checkmark">&#x2713;</span>
+            <strong>Thanks!</strong> You've successfully authorised Bugs 2 Trello
+        </div>
+        <div id="error" style="display: none;">
+            <h1>Uh oh.</h1>
+            <p>Looks like something has gone wrong authorising you with Trello.</p>
+            <p>Please try checking your Internet connection, restarting your browser and re-installing this extension.</p>
+        </div>
+
+        <div id="loggedout" class="well">
+          <a id="connect" href="#">Connect To Trello</a>
+        </div>
+
+        <div id="loggedin" class="well">
+              Logged in to Trello as <span id="fullName"></span> -- 
+              <a id="disconnect" href="#">Log Out</a>
+        </div>
+
     </div>
 
-    <div id="loggedin">
-          Logged in to Trello as <span id="fullName"></span> -- 
-          <a id="disconnect" href="#">Log Out</a>
+    <div id="push"></div>
+
     </div>
+
+    <div class="footer well">
+        <div class="container">
+        <p  class="muted credit">
+            Built by Andrew Starr-Bochicchio,
+            with huge thanks to the team <a href="https://twitter.com/trello">@trello</a>!
+            Extension code is licensed under MIT and is available on <a href="https://code.launchpad.net/~andrewsomething/+junk/bug2trello">Launchpad</a>.
+        </p>
+        </div>
+    </div>
+
   </body>
+</html>
 
-<html>
