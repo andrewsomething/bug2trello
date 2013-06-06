@@ -1,0 +1,16 @@
+{
+  "name": "bug2trello",
+  "version": "0.1",
+    "manifest_version": 2,
+  "description": "Import bug information to a Trello card.",
+  "browser_action": {
+    "default_title": "Bugs 2 Trello",
+    "default_icon": "icon.png",
+    "default_popup": "popup.html"
+  },
+  "permissions": [
+    "tabs",
+    "https://api.trello.com/"
+  ],
+	"content_security_policy": "script-src 'self' https://api.trello.com https://ajax.googleapis.com; object-src 'self'"
+}

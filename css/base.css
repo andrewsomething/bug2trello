@@ -1,0 +1,27 @@
+body {
+    min-width:357px;
+    background: #E6E6E6;
+    overflow-x:hidden;
+}
+
+.addLink {
+    display: none;
+    font-size: 65%
+}
+
+#header {
+    border-bottom: 1px solid #000;
+    font-size: 80%
+}
+
+#output {
+    padding: 4px;
+}
+
+.hidden {
+    display: none;
+}
+
+.shown {
+    display: block;
+}
