@@ -25,12 +25,21 @@ var getBoards = function(){
 
 function getlists(){
     var board = $('#board_list :selected').val();
+    $('#lists_list').find('option').remove();
+    $('#lists_list').append('<option>Select a list</option>');
+    $("#add-bug").removeClass("btn-primary");
+    $("#add-bug").addClass("disabled");
     Trello.get("boards/" + board + "/lists", function(lists) {
         $.each(lists, function(ix, lists) {
             $(new Option(lists.name, lists.id)).appendTo("#lists_list");
             console.log(lists.name, lists.id);
         });
     });
+};
+
+function cardSelected(){ 
+    $("#add-bug").addClass("btn-primary");
+    $("#add-bug").removeClass("disabled");
 };
 
 function onAuthorize() {
@@ -74,5 +83,6 @@ window.addEventListener('load', init);
 document.addEventListener('DOMContentLoaded', function () {
     $("#disconnect").click(logout);
     $("#connect").click(init);
-    $("#board_list").change(getlists)
+    $("#board_list").change(getlists);
+    $("#lists_list").change(cardSelected);
 });
