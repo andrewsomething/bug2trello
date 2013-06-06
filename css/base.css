@@ -10,6 +10,11 @@
     padding: 4px;
 }
 
+#popup-footer-btns {
+    padding-left:10%;
+    padding-right:10%;
+}
+
 
 /* Sticky footer styles
 http://twitter.github.io/bootstrap/examples/sticky-footer.html
