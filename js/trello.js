@@ -160,7 +160,8 @@ function addBugzilla(url) {
     var bugNum = url.search.split('id=').slice(-1)[0];
     // Assumes that the hostname will be bugzilla.organization.{com|org|net}
     var bugOrg = url.hostname.split('.')[1]
-    var bugUrl = "https://" + url.hostname + "/jsonrpc.cgi?method=Bug.get&params=[{\"ids\":[" + bugNum + "]}]"
+    var bugPrefix = url.href.split('show_bug.cgi')[0]
+    var bugUrl = bugPrefix + "/jsonrpc.cgi?method=Bug.get&params=[{\"ids\":[" + bugNum + "]}]"
     var bugJson = $.ajax({
         type: "Get",
         url: bugUrl,
@@ -193,10 +194,7 @@ function parseLink(tablink) {
     else if(parser.hostname == 'sourceforge.net' && (parser.pathname.indexOf('bugs') > -1 || parser.pathname.indexOf('feature-requests') > -1)) {
         addSourceforge(parser);
     }
-    else if((parser.hostname.indexOf('bugzilla') > -1) && (parser.pathname.indexOf('show_bug') > -1)) {
-        addBugzilla(parser);
-    }
-    else if((parser.hostname == 'bugs.kde.org') && (parser.pathname.indexOf('show_bug') > -1)) {
+    else if(parser.pathname.indexOf('show_bug.cgi') > -1) {
         addBugzilla(parser);
     }
     else {
