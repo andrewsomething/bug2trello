@@ -75,11 +75,11 @@ var logout = function() {
 }
 
 function addGithub(url) {
-    path = url.pathname.split('/');
-    bugNum = path[path.length - 1];
-    bugOwner = path[1];
-    bugRepo = path[2];
-    bugUrl = "https://api.github.com/repos/" + bugOwner + "/" + bugRepo + "/" + "issues/" + bugNum
+    var path = url.pathname.split('/');
+    var bugNum = path[path.length - 1];
+    var bugOwner = path[1];
+    var bugRepo = path[2];
+    var bugUrl = "https://api.github.com/repos/" + bugOwner + "/" + bugRepo + "/" + "issues/" + bugNum
     bugJson = $.ajax({
         type: "Get",
         url: bugUrl,
@@ -95,12 +95,11 @@ function addGithub(url) {
 }
 
 function addBitbucket(url) {
-    path = url.pathname.split('/');
-    bugNum = path[4];
-    bugOwner = path[1];
-    bugRepo = path[2];
-    bugUrl = "https://bitbucket.org/api/1.0/repositories/" + bugOwner + "/" + bugRepo + "/" + "issues/" + bugNum
-    console.log(bugNum, bugOwner, bugRepo)
+    var path = url.pathname.split('/');
+    var bugNum = path[4];
+    var bugOwner = path[1];
+    var bugRepo = path[2];
+    var bugUrl = "https://bitbucket.org/api/1.0/repositories/" + bugOwner + "/" + bugRepo + "/" + "issues/" + bugNum
     bugJson = $.ajax({
         type: "Get",
         url: bugUrl,
