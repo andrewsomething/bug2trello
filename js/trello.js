@@ -14,7 +14,7 @@ var addCard = function(num, title, bdesc, link) {
         idList: list,
         success: closeOnSuccess
     });
-};
+}
 
 var getBoards = function(){
     Trello.get("/members/me/boards/", function(boards) {
@@ -22,7 +22,7 @@ var getBoards = function(){
             $(new Option(boards.name, boards.id)).appendTo("#board_list");
         });
     });
-};
+}
 
 function getlists(){
     var board = $('#board_list :selected').val();
@@ -36,13 +36,20 @@ function getlists(){
             $(new Option(lists.name, lists.id)).appendTo("#lists_list");
         });
     });
-};
+}
 
 function cardSelected(){ 
-    $("#add-bug").addClass("btn-primary");
-    $("#add-bug").removeClass("disabled");
-    $("i").addClass("icon-white");
-};
+    var list = $('#lists_list :selected').val();
+    if (list == "Select a list") {
+        $("#add-bug").removeClass("btn-primary");
+        $("#add-bug").addClass("disabled");
+    }
+    else {
+        $("#add-bug").addClass("btn-primary");
+        $("#add-bug").removeClass("disabled");
+        $("i").addClass("icon-white");
+    }
+}
 
 function onAuthorize() {
     Trello.members.get("me", function(member) {
@@ -51,7 +58,7 @@ function onAuthorize() {
     $('#loggedout').hide();
     $('#loggedin').show();
     getBoards();
-};
+}
 
 var logout = function() {
     Trello.deauthorize();
@@ -63,10 +70,10 @@ var logout = function() {
     $('#board_list').append('<option>Select a board</option>');
     $("#add-bug").removeClass("btn-primary");
     $("#add-bug").addClass("disabled");
-};
+}
 
 function addGithub(url) {
-    path = url.pathname.split('/')
+    path = url.pathname.split('/');
     bugNum = path[path.length - 1];
     bugOwner = path[1];
     bugRepo = path[2];
@@ -87,9 +94,9 @@ function addGithub(url) {
 
 function addLaunchpad(url) {
     var path = url.pathname.split('+bug/').slice(-1)[0];
-    bugNum = path.split('/')[0];
-    bugUrl = "https://api.launchpad.net/1.0/bugs/" + bugNum
-    bugJson = $.ajax({
+    var bugNum = path.split('/')[0];
+    var bugUrl = "https://api.launchpad.net/1.0/bugs/" + bugNum
+    var bugJson = $.ajax({
         type: "Get",
         url: bugUrl,
         crossDomain: true,
