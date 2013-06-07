@@ -24,8 +24,10 @@ var getBoards = function(){
     });
 }
 
-function getlists(){
+function boardSelected(){
     var board = $('#board_list :selected').val();
+    var boardLink = "https://trello.com/board/" + board
+    $('#trello-link a').prop('href', boardLink)
     $('#lists_list').find('option').remove();
     $('#lists_list').append('<option>Select a list</option>');
     $("#add-bug").removeClass("btn-primary");
@@ -183,7 +185,7 @@ window.addEventListener('load', init);
 document.addEventListener('DOMContentLoaded', function () {
     $("#disconnect").click(logout);
     $("#connect").click(init);
-    $("#board_list").change(getlists);
+    $("#board_list").change(boardSelected);
     $("#lists_list").change(cardSelected);
     $("#add-bug").click(addClicked);
 });
