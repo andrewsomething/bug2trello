@@ -15,8 +15,7 @@
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/base.css" >
 
-    <!-- Fav and touch icons -->
-    <link rel="shortcut icon" href="ico/favicon.png">
+    <link rel="shortcut icon" href="./icon.png">
   </head>
 
   <body>
@@ -38,18 +37,29 @@
             <p>Please try checking your Internet connection.</p>
             <button type="button" class="close" data-dismiss="alert">&times;</button>
         </div>
-        <div>
-        <p class="lead"> Here is some place holder text.</p>
-        
-        <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Typi non habent claritatem insitam; est usus legentis in iis qui facit eorum claritatem. Investigationes demonstraverunt lectores legere me lius quod ii legunt saepius. Claritas est etiam processus dynamicus, qui sequitur mutationem consuetudium lectorum. Mirum est notare quam littera gothica, quam nunc putamus parum claram, anteposuerit litterarum formas humanitatis per seacula quarta decima et quinta decima. Eodem modo typi, qui nunc nobis videntur parum clari, fiant sollemnes in futurum.</p></div>
 
-        <div id="loggedout" class="well" style="display: none;">
-          <a id="connect" href="#" class="btn-link">Connect To Trello</a>
+        <div class="row">
+        <div class="span6">
+            <p class="lead"> Thanks for trying Bugs 2 Trello!</p>
+            <p>Bugs 2 Trello is a Chrome extension to add bugs/issues to a Treallo board. You probably already know this if you've gotten this far.</p>
+            <p>It currently supports both Launchpad bugs and GitHub issues.</p>
         </div>
 
-        <div id="loggedin" class="well" style="display: none;">
+        <div class="span6">
+            <p class="lead">We love feedback and patches!</p>
+            <p>Bugs 2 Trello is open source software. It is released under the <a href="http://opensource.org/licenses/MIT">MIT license</a>. The code is available on <a href="https://github.com/andrewsomething/bug2trello">GitHub</a>, and you can <a href="https://github.com/andrewsomething/bug2trello/issues">report bugs</a> there.</p>
+        </div>
+        </div>
+
+        <div>
+            <div id="loggedout" class="well" style="display: none;">
+              <a id="connect" href="#" class="btn-link">Connect To Trello</a>
+            </div>
+
+            <div id="loggedin" class="well" style="display: none;">
               Logged in to Trello as <span id="fullName"></span> -- 
               <a id="disconnect" href="#" class="btn-link">Log Out</a>
+            </div>
         </div>
 
     </div>
@@ -61,10 +71,7 @@
     <div class="footer well">
         <div class="container">
         <p  class="muted credit">
-            Built by Andrew Starr-Bochicchio,
-            with huge thanks to the team <a href="https://twitter.com/trello">@trello</a>!
-            Extension code is licensed under MIT and is available on <a href="https://code.launchpad.net/~andrewsomething/+junk/bug2trello">Launchpad</a>.
-        </p>
+            Built by Andrew Starr-Bochicchio, with many thanks to the team at <a href="https://www.trello.com">Trello</a>!</p>
         </div>
     </div>
 
