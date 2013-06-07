@@ -94,6 +94,27 @@ function addGithub(url) {
     });
 }
 
+function addBitbucket(url) {
+    path = url.pathname.split('/');
+    bugNum = path[4];
+    bugOwner = path[1];
+    bugRepo = path[2];
+    bugUrl = "https://bitbucket.org/api/1.0/repositories/" + bugOwner + "/" + bugRepo + "/" + "issues/" + bugNum
+    console.log(bugNum, bugOwner, bugRepo)
+    bugJson = $.ajax({
+        type: "Get",
+        url: bugUrl,
+        dataType: "json",
+        success: function (data) {
+            var num = bugRepo + ": #" + data.local_id
+            addCard(num, data.title ,data.content, url)
+        },
+        error:  function () {
+            $('#error').show();
+            }
+    });
+}
+
 function addLaunchpad(url) {
     var path = url.pathname.split('+bug/').slice(-1)[0];
     var bugNum = path.split('/')[0];
@@ -165,6 +186,9 @@ function parseLink(tablink) {
     }
     else if(parser.hostname == 'github.com' && (parser.pathname.indexOf('issues') > -1)) {
         addGithub(parser);
+    }
+    else if(parser.hostname == 'bitbucket.org' && (parser.pathname.indexOf('issue') > -1)) {
+        addBitbucket(parser);
     }
     else if(parser.hostname == 'sourceforge.net' && (parser.pathname.indexOf('bugs') > -1 || parser.pathname.indexOf('feature-requests') > -1)) {
         addSourceforge(parser);
