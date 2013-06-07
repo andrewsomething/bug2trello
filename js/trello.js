@@ -135,6 +135,28 @@ function addSourceforge(url) {
     });
 }
 
+function addBugzilla(url) {
+    var bugNum = url.search.split('id=').slice(-1)[0];
+    // Assumes that the hostname will be bugzilla.organization.{com|org|net}
+    var bugOrg = url.hostname.split('.')[1]
+    var bugUrl = "https://" + url.hostname + "/jsonrpc.cgi?method=Bug.get&params=[{\"ids\":[" + bugNum + "]}]"
+    var bugJson = $.ajax({
+        type: "Get",
+        url: bugUrl,
+        crossDomain: true,
+        dataType: "json",
+        success: function (data) {
+            var bugJson = data.result.bugs["0"];
+            var num = bugOrg + ": #" + bugJson.id;
+            addCard(num, bugJson.summary , "", url);
+            console.log(data)
+        },
+        error:  function () {
+            $('#error').show();
+            }
+    });
+}
+
 function parseLink(tablink) {
     var parser = document.createElement('a');
     parser.href = tablink;
@@ -144,8 +166,14 @@ function parseLink(tablink) {
     else if(parser.hostname == 'github.com' && (parser.pathname.indexOf('issues') > -1)) {
         addGithub(parser);
     }
-    if(parser.hostname == 'sourceforge.net' && (parser.pathname.indexOf('bugs') > -1 || parser.pathname.indexOf('feature-requests') > -1)) {
+    else if(parser.hostname == 'sourceforge.net' && (parser.pathname.indexOf('bugs') > -1 || parser.pathname.indexOf('feature-requests') > -1)) {
         addSourceforge(parser);
+    }
+    else if((parser.hostname.indexOf('bugzilla') > -1) && (parser.pathname.indexOf('show_bug') > -1)) {
+        addBugzilla(parser);
+    }
+    else if((parser.hostname == 'bugs.kde.org') && (parser.pathname.indexOf('show_bug') > -1)) {
+        addBugzilla(parser);
     }
     else {
         $('#error').show();
