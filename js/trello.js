@@ -160,7 +160,7 @@ function addBugzilla(url) {
 function parseLink(tablink) {
     var parser = document.createElement('a');
     parser.href = tablink;
-    if(parser.hostname == 'bugs.launchpad.net') {
+    if(parser.hostname == 'bugs.launchpad.net' && (parser.pathname.indexOf('+bug') > -1)) {
         addLaunchpad(parser);
     }
     else if(parser.hostname == 'github.com' && (parser.pathname.indexOf('issues') > -1)) {
