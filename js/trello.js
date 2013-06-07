@@ -83,7 +83,7 @@ function addGithub(url) {
         url: bugUrl,
         dataType: "json",
         success: function (data) {
-            var num = "Issue: #" + data.number
+            var num = "GH: #" + data.number
             addCard(num, data.title ,data.body, data.html_url)
         },
         error:  function () {
@@ -109,7 +109,28 @@ function addLaunchpad(url) {
             $('#error').show();
             }
     });
+}
 
+function addSourceforge(url) {
+    var path = url.pathname.split('/');
+    var bugNum = path[4];
+    var bugType = path[3];
+    var bugProject = path[2];
+    var bugUrl = "https://sourceforge.net/rest/p/" + bugProject + "/" + bugType + "/"+ bugNum
+    var bugJson = $.ajax({
+        type: "Get",
+        url: bugUrl,
+        crossDomain: true,
+        dataType: "json",
+        success: function (data) {
+            var num = "SF: #" + data.ticket.ticket_num
+            var url = "https://sourceforge.net/p/" + bugProject + "/" + bugType + "/"+ bugNum
+            addCard(num, data.ticket.summary ,data.ticket.description, url)
+        },
+        error:  function () {
+            $('#error').show();
+            }
+    });
 }
 
 function parseLink(tablink) {
@@ -120,6 +141,9 @@ function parseLink(tablink) {
     }
     else if(parser.hostname == 'github.com' && (parser.pathname.indexOf('issues') > -1)) {
         addGithub(parser);
+    }
+    if(parser.hostname == 'sourceforge.net' && (parser.pathname.indexOf('bugs') > -1 || parser.pathname.indexOf('feature-requests') > -1)) {
+        addSourceforge(parser);
     }
     else {
         $('#error').show();
