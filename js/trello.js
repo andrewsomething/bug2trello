@@ -7,7 +7,7 @@ function closeOnSuccess() {
 var addCard = function(num, title, bdesc, link) {
     var list = $('#lists_list :selected').val();
     var name = num + " - " + title;
-    var desc = bdesc + '\n' + link;
+    var desc = link + '\n\n' + bdesc;
     Trello.post("cards", {
         name: name,
         desc: desc,
