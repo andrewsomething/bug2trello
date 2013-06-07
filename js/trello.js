@@ -1,19 +1,20 @@
-//var hideExisiting = function() {
-//    Trello.boards.get("4f1e5db3ff37bfac6b001867/cards/all", function(cards) {
-//        for (contact in cards) {
-//            var lp_id = cards[contact].name
-//            $("[data-lp_id='" + lp_id.split(" ")[0] + "']").hide();
-//        }
-//    });
-//};
+function closeOnSuccess() {
+    setTimeout(function() {
+            window.close();
+            }, 100);
+}
 
-//var addCard = function(lp_id) {
-//    Trello.post("cards", {
-//        name: lp_id,
-//        desc: "http://launchpad.net/~" + lp_id,
-//        idList: "4f1e5db3ff37bfac6b00186b"
-//    });
-//};
+var addCard = function(num, title, bdesc, link) {
+    var list = $('#lists_list :selected').val();
+    var name = num + " - " + title;
+    var desc = bdesc + '\n' + link;
+    Trello.post("cards", {
+        name: name,
+        desc: desc,
+        idList: list,
+        success: closeOnSuccess
+    });
+};
 
 var getBoards = function(){
     Trello.get("/members/me/boards/", function(boards) {
@@ -64,6 +65,67 @@ var logout = function() {
     $("#add-bug").addClass("disabled");
 };
 
+function addGithub(url) {
+    path = url.pathname.split('/')
+    bugNum = path[path.length - 1];
+    bugOwner = path[1];
+    bugRepo = path[2];
+    bugUrl = "https://api.github.com/repos/" + bugOwner + "/" + bugRepo + "/" + "issues/" + bugNum
+    bugJson = $.ajax({
+        type: "Get",
+        url: bugUrl,
+        dataType: "json",
+        success: function (data) {
+            var num = "Issue: #" + data.number
+            addCard(num, data.title ,data.body, data.html_url)
+        },
+        error:  function () {
+            $('#error').show();
+            }
+    });
+}
+
+function addLaunchpad(url) {
+    var path = url.pathname.split('+bug/').slice(-1)[0];
+    bugNum = path.split('/')[0];
+    bugUrl = "https://api.launchpad.net/1.0/bugs/" + bugNum
+    bugJson = $.ajax({
+        type: "Get",
+        url: bugUrl,
+        crossDomain: true,
+        dataType: "json",
+        success: function (data) {
+            var num = "LP: #" + data.id
+            addCard(num, data.title ,data.description, data.web_link)
+        },
+        error:  function () {
+            $('#error').show();
+            }
+    });
+
+}
+
+function parseLink(tablink) {
+    var parser = document.createElement('a');
+    parser.href = tablink;
+    if(parser.hostname == 'bugs.launchpad.net') {
+        addLaunchpad(parser);
+    }
+    else if(parser.hostname == 'github.com' && (parser.pathname.indexOf('issues') > -1)) {
+        addGithub(parser);
+    }
+    else {
+        $('#error').show();
+    }
+}
+
+function addClicked() {
+    chrome.tabs.getSelected(null,function(tab) {
+        var tablink = tab.url;
+        parseLink(tablink)
+    });
+}
+
 function closePopup() {
     // Close popup and open auth tab
     setTimeout(function() {
@@ -92,4 +154,5 @@ document.addEventListener('DOMContentLoaded', function () {
     $("#connect").click(init);
     $("#board_list").change(getlists);
     $("#lists_list").change(cardSelected);
+    $("#add-bug").click(addClicked);
 });

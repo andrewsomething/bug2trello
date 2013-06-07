@@ -18,6 +18,10 @@ function init() {
     Trello.authorize({
         'name': "Bugs 2 Trello",
         'expiration': "never",
+        'scope': {
+            'write': true,
+            'read': true
+        },
         'success': onAuthorize,
         'error': function () {
             $('#error').show();
