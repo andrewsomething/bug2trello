@@ -85,7 +85,7 @@ function addGithub(url) {
         url: bugUrl,
         dataType: "json",
         success: function (data) {
-            var num = "GH: #" + data.number
+            var num = bugRepo + ": #" + data.number
             addCard(num, data.title ,data.body, data.html_url)
         },
         error:  function () {
@@ -108,6 +108,28 @@ function addBitbucket(url) {
         success: function (data) {
             var num = bugRepo + ": #" + data.local_id
             addCard(num, data.title ,data.content, url)
+        },
+        error:  function () {
+            $('#error').show();
+            }
+    });
+}
+
+function addGoogle(url) {
+    var path = url.pathname.split('/');
+    var bugNum = url.search.split('id=').slice(-1)[0];
+    var bugProj = path[2];
+    var bugUrl = "https://code.google.com/feeds/issues/p/" + bugProj + "/issues/full?id=" + bugNum
+    var bugJson = $.ajax({
+        type: "Get",
+        url: bugUrl,
+        crossDomain: true,
+        dataType: "xml",
+        success: function (data) {
+            desc = $(data).find('content').text()
+            title = $(data).find("entry").find('title').text();
+            var num = bugProj + ": #" + bugNum;
+            addCard(num, title, desc, url);
         },
         error:  function () {
             $('#error').show();
@@ -158,7 +180,6 @@ function addSourceforge(url) {
 
 function addBugzilla(url) {
     var bugNum = url.search.split('id=').slice(-1)[0];
-    // Assumes that the hostname will be bugzilla.organization.{com|org|net}
     var bugOrg = url.hostname.split('.')[1]
     var bugPrefix = url.href.split('show_bug.cgi')[0]
     var bugUrl = bugPrefix + "/jsonrpc.cgi?method=Bug.get&params=[{\"ids\":[" + bugNum + "]}]"
@@ -196,6 +217,9 @@ function parseLink(tablink) {
     }
     else if(parser.pathname.indexOf('show_bug.cgi') > -1) {
         addBugzilla(parser);
+    }
+    else if(parser.hostname == 'code.google.com' && (parser.pathname.indexOf('detail') > -1)) {
+        addGoogle(parser);
     }
     else {
         $('#error').show();

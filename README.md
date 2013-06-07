@@ -3,7 +3,7 @@ bug2trello
 
 A Chrome extension to add bugs/issues to a Treallo board.
 
-It currently supports Launchpad, GitHub, SourceForge, and BitBucket.
+It currently supports Launchpad, GitHub, SourceForge, Google Code and BitBucket.
 
 There is also support for some Bugzilla instances. This support currently requires that the JSON-RPC interface is available.
 
