@@ -11,7 +11,8 @@
   },
   "permissions": [
     "tabs",
-    "https://*/"
+    "https://*/",
+    "http://*/"
   ],
 	"content_security_policy": "script-src 'self' https://api.trello.com https://ajax.googleapis.com https://api.launchpad.net; object-src 'self'"
 }

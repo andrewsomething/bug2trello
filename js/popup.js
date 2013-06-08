@@ -177,6 +177,26 @@ function addSourceforge(url) {
     });
 }
 
+function addDebianBTS(url) {
+    var bugNum = url.search.split('bug=').slice(-1)[0];
+    console.log(bugNum)
+    var bugJson = $.ajax({
+        type: "Get",
+        url: url,
+        crossDomain: true,
+        dataType: "html",
+        success: function (data) {
+            // Get title, removing the trailing " - Debian Bug report"
+            var title = $(data).filter('title').text().slice(0, -25);
+            var desc = $(data).filter('.message').eq(0).text();
+            addCard("BTS", title , desc, url);
+        },
+        error:  function () {
+            $('#error').show();
+            }
+    });
+}
+
 function addBugzilla(url) {
     var bugNum = url.search.split('id=').slice(-1)[0];
     var bugOrg = url.hostname.split('.')[1]
@@ -191,7 +211,6 @@ function addBugzilla(url) {
             var bugJson = data.result.bugs["0"];
             var num = bugOrg + ": #" + bugJson.id;
             addCard(num, bugJson.summary , "", url);
-            console.log(data)
         },
         error:  function () {
             $('#error').show();
@@ -219,6 +238,9 @@ function parseLink(tablink) {
     }
     else if(parser.hostname == 'code.google.com' && (parser.pathname.indexOf('detail') > -1)) {
         addGoogle(parser);
+    }
+    else if(parser.hostname == 'bugs.debian.org' && (parser.pathname.indexOf('bugreport.cgi') > -1)) {
+        addDebianBTS(parser);
     }
     else {
         $('#error').show();
