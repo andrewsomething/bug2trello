@@ -29,24 +29,19 @@ function boardSelected(){
     var boardLink = "https://trello.com/board/" + board
     $('#trello-link a').prop('href', boardLink)
     $('#lists_list').find('option').remove();
-    $('#lists_list').append('<option>Select a list</option>');
-    $("#add-bug").removeClass("btn-primary");
-    $("#add-bug").addClass("disabled");
-    $("i").removeClass("icon-white");
-    Trello.get("boards/" + board + "/lists", function(lists) {
-        $.each(lists, function(ix, lists) {
-            $(new Option(lists.name, lists.id)).appendTo("#lists_list");
-        });
-    });
-}
-
-function cardSelected(){ 
-    var list = $('#lists_list :selected').val();
-    if (list == "Select a list") {
+    if (board == "Select a board") {
+        $('#lists_list').append('<option>Select a list</option>');
         $("#add-bug").removeClass("btn-primary");
         $("#add-bug").addClass("disabled");
+        $("i").removeClass("icon-white");
     }
     else {
+        Trello.get("boards/" + board + "/lists", function(lists) {
+            $.each(lists, function(ix, lists) {
+                $(new Option(lists.name, lists.id)).appendTo("#lists_list");
+            });
+        });
+        $("#lists_list").val($("#lists_list option:first").val());
         $("#add-bug").addClass("btn-primary");
         $("#add-bug").removeClass("disabled");
         $("i").addClass("icon-white");
@@ -281,6 +276,5 @@ document.addEventListener('DOMContentLoaded', function () {
     $("#disconnect").click(logout);
     $("#connect").click(init);
     $("#board_list").change(boardSelected);
-    $("#lists_list").change(cardSelected);
     $("#add-bug").click(addClicked);
 });
