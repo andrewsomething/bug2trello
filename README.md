@@ -1,7 +1,7 @@
-bug2trello
+Bug 2 Trello
 ==========
 
-A Chrome extension to add bugs/issues to a Treallo board.
+A Chrome extension to add bugs/issues to a Trello board.
 
 It currently supports Launchpad, GitHub, SourceForge, Google Code, BitBucket, and Debian's BTS.
 
