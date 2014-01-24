@@ -174,7 +174,6 @@ function addSourceforge(url) {
 
 function addDebianBTS(url) {
     var bugNum = url.search.split('bug=').slice(-1)[0];
-    console.log(bugNum)
     var bugJson = $.ajax({
         type: "Get",
         url: url,
