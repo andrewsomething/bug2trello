@@ -1,7 +1,7 @@
 function closeOnSuccess() {
     setTimeout(function() {
-            window.close();
-            }, 100);
+        window.close();
+    }, 100);
 }
 
 var addCard = function(num, title, bdesc, link) {
@@ -34,8 +34,7 @@ function boardSelected(){
         $("#add-bug").removeClass("btn-primary");
         $("#add-bug").addClass("disabled");
         $("i").removeClass("icon-white");
-    }
-    else {
+    } else {
         Trello.get("boards/" + board + "/lists", function(lists) {
             $.each(lists, function(ix, lists) {
                 $(new Option(lists.name, lists.id)).appendTo("#lists_list");
@@ -81,11 +80,11 @@ function addGithub(url) {
         dataType: "json",
         success: function (data) {
             var num = bugRepo + ": #" + data.number
-            addCard(num, data.title ,data.body, data.html_url)
+            addCard(num, data.title, data.body, data.html_url)
         },
-        error:  function () {
+        error: function () {
             $('#error').show();
-            }
+        }
     });
 }
 
@@ -101,11 +100,11 @@ function addBitbucket(url) {
         dataType: "json",
         success: function (data) {
             var num = bugRepo + ": #" + data.local_id
-            addCard(num, data.title ,data.content, url)
+            addCard(num, data.title, data.content, url)
         },
-        error:  function () {
+        error: function () {
             $('#error').show();
-            }
+        }
     });
 }
 
@@ -125,9 +124,9 @@ function addGoogle(url) {
             var num = bugProj + ": #" + bugNum;
             addCard(num, title, desc, url);
         },
-        error:  function () {
+        error: function () {
             $('#error').show();
-            }
+        }
     });
 }
 
@@ -142,11 +141,11 @@ function addLaunchpad(url) {
         dataType: "json",
         success: function (data) {
             var num = "LP: #" + data.id
-            addCard(num, data.title ,data.description, data.web_link)
+            addCard(num, data.title, data.description, data.web_link)
         },
-        error:  function () {
+        error: function () {
             $('#error').show();
-            }
+        }
     });
 }
 
@@ -164,11 +163,11 @@ function addSourceforge(url) {
         success: function (data) {
             var num = "SF: #" + data.ticket.ticket_num
             var url = "https://sourceforge.net/p/" + bugProject + "/" + bugType + "/"+ bugNum
-            addCard(num, data.ticket.summary ,data.ticket.description, url)
+            addCard(num, data.ticket.summary, data.ticket.description, url)
         },
-        error:  function () {
+        error: function () {
             $('#error').show();
-            }
+        }
     });
 }
 
@@ -183,11 +182,11 @@ function addDebianBTS(url) {
             // Get title, removing the trailing " - Debian Bug report"
             var title = $(data).filter('title').text().slice(0, -25);
             var desc = $(data).filter('.message').eq(0).text();
-            addCard("BTS", title , desc, url);
+            addCard("BTS", title, desc, url);
         },
-        error:  function () {
+        error: function () {
             $('#error').show();
-            }
+        }
     });
 }
 
@@ -204,11 +203,11 @@ function addBugzilla(url) {
         success: function (data) {
             var bugJson = data.result.bugs["0"];
             var num = bugOrg + ": #" + bugJson.id;
-            addCard(num, bugJson.summary , "", url);
+            addCard(num, bugJson.summary, "", url);
         },
-        error:  function () {
+        error: function () {
             $('#error').show();
-            }
+        }
     });
 }
 
