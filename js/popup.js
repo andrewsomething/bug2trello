@@ -17,7 +17,7 @@ var addCard = function(num, title, bdesc, link) {
 }
 
 var getBoards = function(){
-    Trello.get("/members/me/boards/", function(boards) {
+    Trello.get("/members/me/boards?filter=open", function(boards) {
         $.each(boards, function(ix, boards) {
             $(new Option(boards.name, boards.id)).appendTo("#board_list");
         });
