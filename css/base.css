@@ -15,9 +15,15 @@
     padding-right:10%;
 }
 
+.container {
+    padding: 0 15px;
+}
+.container .text-muted {
+    margin: 20px 0;
+}
 
 /* Sticky footer styles
-http://twitter.github.io/bootstrap/examples/sticky-footer.html
+http://getbootstrap.com/examples/sticky-footer/
 */
 
 html,
@@ -28,11 +34,12 @@ body {
 
 /* Wrapper for page content to push down footer */
 #wrap {
-min-height: 100%;
-height: auto !important;
-height: 100%;
-/* Negative indent footer by it's height */
-    margin: 0 auto -60px;
+  min-height: 100%;
+  height: auto;
+  /* Negative indent footer by its height */
+  margin: 0 auto -60px;
+  /* Pad bottom by footer height */
+  padding: 0 0 60px;
 }
 
 /* Set the fixed height of the footer here */
