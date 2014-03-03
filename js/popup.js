@@ -6,7 +6,12 @@ function closeOnSuccess() {
 
 var addCard = function(num, title, bdesc, link) {
     var list = $('#lists_list :selected').val();
-    var name = num + " - " + title;
+    if (num == ''){
+        var name = title;
+    }
+    else {
+        var name = num + " - " + title;
+    }
     var desc = link + '\n\n' + bdesc;
     Trello.post("cards", {
         name: name,
@@ -132,23 +137,41 @@ function addGoogle(url) {
     });
 }
 
-function addLaunchpad(url) {
-    var path = url.pathname.split('+bug/').slice(-1)[0];
-    var bugNum = path.split('/')[0];
-    var bugUrl = "https://api.launchpad.net/1.0/bugs/" + bugNum
-    var bugJson = $.ajax({
-        type: "Get",
-        url: bugUrl,
-        crossDomain: true,
-        dataType: "json",
-        success: function (data) {
-            var num = "LP: #" + data.id
-            addCard(num, data.title, data.description, data.web_link)
-        },
-        error: function () {
-            $('#error').show();
-        }
-    });
+function addLaunchpad(url, type) {
+    if (type == "Bug") {
+        var path = url.pathname.split('+bug/').slice(-1)[0];
+        var bugNum = path.split('/')[0];
+        var bugUrl = "https://api.launchpad.net/1.0/bugs/" + bugNum
+        var bugJson = $.ajax({
+            type: "Get",
+            url: bugUrl,
+            crossDomain: true,
+            dataType: "json",
+            success: function (data) {
+                var num = "LP: #" + data.id
+                addCard(num, data.title, data.description, data.web_link)
+            },
+            error: function () {
+                $('#error').show();
+            }
+        });
+    }
+    else if (type = "Merge") {
+        var bugJson = $.ajax({
+            type: "Get",
+            url: url,
+            crossDomain: true,
+            dataType: "html",
+            success: function (data) {
+                var body = $(data).filter('meta[name="description"]').attr("content");
+                var title = $(data).find('.context-publication h1').text();
+                addCard('', title, body, url)
+            },
+            error: function () {
+                $('#error').show();
+            }
+        });
+    }
 }
 
 function addSourceforge(url) {
@@ -217,7 +240,10 @@ function parseLink(tablink) {
     var parser = document.createElement('a');
     parser.href = tablink;
     if(parser.hostname == 'bugs.launchpad.net' && (parser.pathname.indexOf('+bug') > -1)) {
-        addLaunchpad(parser);
+        addLaunchpad(parser, "Bug");
+    }
+    else if (parser.hostname == 'code.launchpad.net' && (parser.pathname.indexOf('+merge') > -1)) {
+        addLaunchpad(parser, "Merge");
     }
     else if(parser.hostname == 'github.com') {
         if (parser.pathname.indexOf('issues') > -1) {
