@@ -68,7 +68,7 @@ var logout = function() {
     $("#add-bug").addClass("disabled");
 }
 
-function addGithub(url) {
+function addGithub(url, type) {
     var path = url.pathname.split('/');
     var bugNum = path[path.length - 1];
     var bugOwner = path[1];
@@ -81,6 +81,7 @@ function addGithub(url) {
             var prefix = bugRepo + ": #" + bugNum
             var body = $(data).filter('meta[name="description"]').attr("content");
             var title = $(data).find('.js-issue-title').text();
+            title = title + " (" + type + ")"
             addCard(prefix, title, body, url)
         },
         error: function () {
@@ -218,8 +219,13 @@ function parseLink(tablink) {
     if(parser.hostname == 'bugs.launchpad.net' && (parser.pathname.indexOf('+bug') > -1)) {
         addLaunchpad(parser);
     }
-    else if(parser.hostname == 'github.com' && (parser.pathname.indexOf('issues') > -1)) {
-        addGithub(parser);
+    else if(parser.hostname == 'github.com') {
+        if (parser.pathname.indexOf('issues') > -1) {
+            addGithub(parser, 'Issue');
+        }
+        else if (parser.pathname.indexOf('pull') > -1) {
+            addGithub(parser, 'Pull');
+        }
     }
     else if(parser.hostname == 'bitbucket.org' && (parser.pathname.indexOf('issue') > -1)) {
         addBitbucket(parser);
