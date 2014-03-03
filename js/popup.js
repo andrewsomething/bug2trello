@@ -73,14 +73,15 @@ function addGithub(url) {
     var bugNum = path[path.length - 1];
     var bugOwner = path[1];
     var bugRepo = path[2];
-    var bugUrl = "https://api.github.com/repos/" + bugOwner + "/" + bugRepo + "/" + "issues/" + bugNum
-    bugJson = $.ajax({
+    var bugJson = $.ajax({
         type: "Get",
-        url: bugUrl,
-        dataType: "json",
+        url: url,
+        dataType: "html",
         success: function (data) {
-            var num = bugRepo + ": #" + data.number
-            addCard(num, data.title, data.body, data.html_url)
+            var prefix = bugRepo + ": #" + bugNum
+            var body = $(data).filter('meta[name="description"]').attr("content");
+            var title = $(data).find('.js-issue-title').text();
+            addCard(prefix, title, body, url)
         },
         error: function () {
             $('#error').show();
@@ -119,7 +120,7 @@ function addGoogle(url) {
         crossDomain: true,
         dataType: "xml",
         success: function (data) {
-            desc = $(data).find('content').text()
+            desc = $(data).find('content').text();
             title = $(data).find("entry").find('title').text();
             var num = bugProj + ": #" + bugNum;
             addCard(num, title, desc, url);
