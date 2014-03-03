@@ -1,6 +1,6 @@
 {
   "name": "Bug 2 Trello",
-  "version": "0.4",
+  "version": "0.5",
   "manifest_version": 2,
   "description": "Import bug information to a Trello card.",
   "options_page": "settings.html",
