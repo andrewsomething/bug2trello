@@ -73,11 +73,18 @@ var logout = function() {
     $("#add-bug").addClass("disabled");
 }
 
-function addGithub(url, type) {
+function addGithub(url) {
     var path = url.pathname.split('/');
     var bugNum = path[path.length - 1];
     var bugOwner = path[1];
     var bugRepo = path[2];
+    var type = 'Unkown'
+    if (url.pathname.indexOf('issues') > -1) {
+        type = 'Issue';
+    }
+    else if (url.pathname.indexOf('pull') > -1) {
+        type = 'Pull';
+    }
     var bugJson = $.ajax({
         type: "Get",
         url: url,
@@ -269,7 +276,22 @@ function parseLink(tablink) {
         addDebianBTS(parser);
     }
     else {
-        $('#error').show();
+        $.ajax({
+            type: "Get",
+            url: tablink,
+            dataType: "html",
+            success: function (data) {
+                var og_site_name = $(data).filter('meta[property="og:site_name"]').attr("content");
+                if(og_site_name == 'GitHub Enterprise') {
+                    addGithub(parser);
+                } else {
+                    $('#error').show();
+                }
+            },
+            error: function () {
+                $('#error').show();
+            }
+        });
     }
 }
 
