@@ -1,5 +1,6 @@
 {
   "name": "Bug 2 Trello",
+  "short_name": "bug2trello",
   "version": "0.6",
   "manifest_version": 2,
   "description": "Import bug information to a Trello card.",
