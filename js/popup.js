@@ -12,7 +12,7 @@ var addCard = function(num, title, bdesc, link) {
     else {
         var name = num + " - " + title;
     }
-    var desc = link + '\n\n' + bdesc;
+    var desc = '[' + (num ? num : name) + '](' + link + ')\n\n' + bdesc;
     Trello.post("cards", {
         name: name,
         desc: desc,
