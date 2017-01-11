@@ -254,10 +254,10 @@ function parseLink(tablink) {
     }
     else if(parser.hostname == 'github.com') {
         if (parser.pathname.indexOf('issues') > -1) {
-            addGithub(parser, 'Issue');
+            addGithub(parser);
         }
         else if (parser.pathname.indexOf('pull') > -1) {
-            addGithub(parser, 'Pull');
+            addGithub(parser);
         }
     }
     else if(parser.hostname == 'bitbucket.org' && (parser.pathname.indexOf('issue') > -1)) {
