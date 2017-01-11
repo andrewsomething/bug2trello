@@ -73,33 +73,24 @@ var logout = function() {
     $("#add-bug").addClass("disabled");
 }
 
-function addGithub(url) {
+function addGithub(url, tabTitle) {
     var path = url.pathname.split('/');
     var bugNum = path[path.length - 1];
     var bugOwner = path[1];
     var bugRepo = path[2];
-    var type = 'Unkown'
+    var type = 'Unkown';
     if (url.pathname.indexOf('issues') > -1) {
         type = 'Issue';
     }
     else if (url.pathname.indexOf('pull') > -1) {
         type = 'Pull';
     }
-    var bugJson = $.ajax({
-        type: "Get",
-        url: url,
-        dataType: "html",
-        success: function (data) {
-            var prefix = bugRepo + ": #" + bugNum
-            var body = $(data).filter('meta[name="description"]').attr("content");
-            var title = $(data).find('.js-issue-title').text();
-            title = title + " (" + type + ")"
-            addCard(prefix, title, body, url)
-        },
-        error: function () {
-            $('#error').show();
-        }
-    });
+
+    var prefix = bugRepo + ": #" + bugNum;
+    var encodedTitles = encodeURI(tabTitle).split("%20%C2%B7%20");
+    var title = decodeURI(encodedTitles[0]) + " (" + type + ")";
+    var body = "";
+    addCard(prefix, title, body, url);
 }
 
 function addBitbucket(url) {
@@ -243,7 +234,7 @@ function addBugzilla(url) {
     });
 }
 
-function parseLink(tablink) {
+function parseLink(tablink, tabTitle) {
     var parser = document.createElement('a');
     parser.href = tablink;
     if(parser.hostname == 'bugs.launchpad.net' && (parser.pathname.indexOf('+bug') > -1)) {
@@ -254,10 +245,10 @@ function parseLink(tablink) {
     }
     else if(parser.hostname == 'github.com') {
         if (parser.pathname.indexOf('issues') > -1) {
-            addGithub(parser, 'Issue');
+            addGithub(parser, tabTitle);
         }
         else if (parser.pathname.indexOf('pull') > -1) {
-            addGithub(parser, 'Pull');
+            addGithub(parser, tabTitle);
         }
     }
     else if(parser.hostname == 'bitbucket.org' && (parser.pathname.indexOf('issue') > -1)) {
@@ -283,7 +274,7 @@ function parseLink(tablink) {
             success: function (data) {
                 var og_site_name = $(data).filter('meta[property="og:site_name"]').attr("content");
                 if(og_site_name == 'GitHub Enterprise') {
-                    addGithub(parser);
+                    addGithub(parser, tabTitle);
                 } else {
                     $('#error').show();
                 }
@@ -297,8 +288,7 @@ function parseLink(tablink) {
 
 function addClicked() {
     chrome.tabs.getSelected(null,function(tab) {
-        var tablink = tab.url;
-        parseLink(tablink)
+        parseLink(tab.url, tab.title);
     });
 }
 
