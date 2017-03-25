@@ -16,7 +16,7 @@ var logout = function() {
 
 function init() {
     Trello.authorize({
-        'name': "Bugs 2 Trello",
+        'name': "Bug 2 Trello",
         'expiration': "never",
         'scope': {
             'write': true,
