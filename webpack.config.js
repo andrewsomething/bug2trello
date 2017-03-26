@@ -1,8 +1,6 @@
-const webpack = require("webpack");
-
 module.exports = {
   entry: {
-    options: "./options/settings.js",
+    options: "./options/options.js",
     popup: "./popup/popup.js",
     vendor: ["jquery"]
   },
@@ -16,13 +14,7 @@ module.exports = {
       use: [{
         loader: "expose-loader",
         options: "jQuery"
-      }, {
-        loader: "expose-loader",
-        options: "$"
       }]
     }]
-  },
-  plugins: [
-    new webpack.optimize.CommonsChunkPlugin({ name: "vendor", filename: "vendor/index.js" })
-  ]
+  }
 };

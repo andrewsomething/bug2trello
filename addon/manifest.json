@@ -5,7 +5,7 @@
   "version": "0.6",
   "description": "Import bug information to a Trello card.",
   "options_ui": {
-    "page": "options/settings.html",
+    "page": "options/options.html",
     "open_in_tab": true
   },
   "browser_action": {
@@ -19,6 +19,6 @@
     "https://*/",
     "http://*/"
   ],
-  "web_accessible_resources": ["options/settings.html"],
+  "web_accessible_resources": ["options/options.html"],
   "content_security_policy": "script-src 'self' https://api.trello.com; object-src 'self'"
 }

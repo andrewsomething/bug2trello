@@ -199,7 +199,7 @@ Bug2TrelloPopup.prototype = {
 
   openTrelloLoginPage() {
     setTimeout(function() {
-      let url = browser.extension.getURL("options/settings.html");
+      let url = browser.extension.getURL("options/options.html");
       browser.tabs.create({url});
       window.close();
     }, 100);

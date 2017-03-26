@@ -1,0 +1,121 @@
+* {
+  font-family: -apple-system, BlinkMacSystemFont,
+               "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell",
+               "Fira Sans", "Droid Sans", "Helvetica Neue",
+               sans-serif;
+  color: #484848;
+}
+
+html, body {
+  margin: 0;
+  font-size: 100%; /* chrome sets this to 75% */
+  background-color: #E9EDF0;
+}
+
+#content {
+  display: flex;
+  flex-shrink: 0; /* chrome bug */
+  flex-direction: column;
+  width: 1000px;
+  min-height: 100vh;
+  margin: 0 auto;
+  background-color: white;
+}
+
+#header {
+  display: flex;
+  flex-shrink: 0; /* chrome bug */
+  padding-top: 20px;
+  align-items: center;
+  justify-content: center;
+}
+
+#logo {
+  width: 128px;
+  height: 128px;
+  background-image: url("../icons/icon-128.png");
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+#appname {
+  margin: 0;
+  margin-top: 15px; /* align text with logo */
+  padding-left: 15px;
+  font-size: 2.5em;
+}
+
+#main {
+  flex: 1;
+  margin: 15px 0;
+}
+
+#login-status {
+  padding: 5px 15px;
+  min-height: 50px;
+}
+
+#login-status[data-status="loggedin"] {
+  background-color: #4CAF50;
+}
+
+#login-status[data-status="loggedout"] {
+  background-color: #EAEFF2;
+}
+
+#login-status[data-status="loginerror"] {
+  background-color: #d93a33;
+}
+
+#login-status:not([data-status="loggedout"]) * {
+  color: white;
+}
+
+#loggedin,
+#loggedout,
+#loginerror {
+  display: none;
+}
+
+#login-status[data-status="loggedin"] > #loggedin,
+#login-status[data-status="loggedout"] > #loggedout,
+#login-status[data-status="loginerror"] > #loginerror {
+  display: block;
+}
+
+#loginerror h1 {
+  margin-top: 16px;
+}
+
+#about {
+  padding: 15px;
+}
+
+#feedback {
+  margin-top: 40px;
+}
+
+.tip {
+  display: inline-block;
+  background-color: #0C99D5;
+  color: white;
+  border-radius: 4px;
+  padding: 4px 8px;
+}
+
+#review-links[data-browser="firefox"] > #chrome-review,
+#review-links[data-browser="chrome"] > #firefox-review {
+  display: none;
+}
+
+#footer {
+  padding: 15px;
+  background-color: #333;
+  font-size: 0.8em;
+}
+
+#footer,
+#footer * {
+  color: white;
+}
