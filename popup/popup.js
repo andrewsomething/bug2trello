@@ -1,333 +1,224 @@
-function closeOnSuccess() {
-    setTimeout(function() {
-        window.close();
-    }, 100);
+const providers = require("./providers/");
+
+function Bug2TrelloPopup() {
+  this.setupListeners();
+  this.trelloLogin();
 }
 
-var addCard = function(num, title, bdesc, link) {
-    var list = $('#lists_list :selected').val();
-    if (num == ''){
-        var name = title;
-    }
-    else {
-        var name = num + " - " + title;
-    }
-    var desc = link + '\n\n' + bdesc;
-    Trello.post("cards", {
-        name: name,
-        desc: desc,
-        idList: list,
-        success: closeOnSuccess
-    });
-}
+Bug2TrelloPopup.prototype = {
+  get boardsSelect() {
+    return document.getElementById("boards");
+  },
 
-var getBoards = function(){
-    Trello.get("/members/me/boards?filter=open", function(boards) {
-        $.each(boards, function(ix, boards) {
-            $(new Option(boards.name, boards.id)).appendTo("#board_list");
-        });
-    });
-}
+  get selectedBoardId() {
+    let select = this.boardsSelect;
+    return select.options[select.selectedIndex].value;
+  },
 
-function boardSelected(){
-    var board = $('#board_list :selected').val();
-    var boardLink = "https://trello.com/board/" + board
-    $('#trello-link a').prop('href', boardLink)
-    $('#lists_list').find('option').remove();
-    if (board == "Select a board") {
-        $('#lists_list').append('<option>Select a list</option>');
-        $("#add-bug").removeClass("btn-primary");
-        $("#add-bug").addClass("disabled");
-        $("i").removeClass("icon-white");
+  get listsSelect() {
+    return document.getElementById("lists");
+  },
+
+  get selectedListId() {
+    let select = this.listsSelect;
+    return select.options[select.selectedIndex].value;
+  },
+
+  set addBugEnabled(enabled) {
+    let button = document.getElementById("add-bug");
+    if (enabled) {
+      button.removeAttribute("disabled");
     } else {
-        Trello.get("boards/" + board + "/lists", function(lists) {
-            $.each(lists, function(ix, lists) {
-                $(new Option(lists.name, lists.id)).appendTo("#lists_list");
-            });
-        });
-        $("#lists_list").val($("#lists_list option:first").val());
-        $("#add-bug").addClass("btn-primary");
-        $("#add-bug").removeClass("disabled");
-        $("i").addClass("icon-white");
+      button.setAttribute("disabled", "true");
     }
-}
+  },
 
-function onAuthorize() {
-    Trello.members.get("me", function(member) {
-        $("#fullName").text(member.fullName);
+  set loggedIn(bool) {
+    document.getElementById("footer").setAttribute("data-loggedin", bool);
+  },
+
+  setupListeners() {
+    let addListener = (elemId, listener, event = "click") => {
+      let el = document.getElementById(elemId);
+      el.addEventListener(event, listener.bind(this));
+    };
+    addListener("disconnect", this.trelloLogout);
+    addListener("connect", this.trelloLogin);
+    addListener("add-bug", this.onAddBugClicked);
+    addListener("trello-link", this.openTrello);
+    addListener("boards", this.onBoardSelected, "change");
+  },
+
+  trelloLogin() {
+    Trello.authorize({
+      interactive: false,
+      success: this.onTrelloLoginSuccess.bind(this),
+      error: this.onTrelloLoginFailed.bind(this)
     });
-    $('#loggedout').hide();
-    $('#loggedin').show();
-    getBoards();
-}
+  },
 
-var logout = function() {
+  onTrelloLoginSuccess() {
+    this.loggedIn = true;
+    this.populateBoards();
+  },
+
+  onTrelloLoginFailed() {
+    this.loggedIn = false;
+    this.openTrelloLoginPage();
+  },
+
+  async onAddBugClicked() {
+    let tab = await browser.tabs.query({
+      currentWindow: true,
+      active: true
+    });
+    let info;
+    try {
+      info = await this.parseLink(tab[0].url);
+    } catch (e) {
+      this.onBugParsingError(e);
+      return;
+    }
+    let listId = this.selectedListId;
+    let name = info.prefix ?
+               `${info.prefix} - ${info.title}` :
+               info.title;
+    let description = `${info.link}\n\n${info.description}`;
+    try {
+      await this.createTrelloCard(listId, name, description);
+    } catch (e) {
+      this.onTrelloError(e);
+      return;
+    }
+    this.showSuccessNotification(info.title);
+    window.close();
+  },
+
+  async onBoardSelected() {
+    this._purgeSelect(this.listsSelect);
+    let boardId = this.selectedBoardId;
+    try {
+      await this.populateLists(boardId);
+    } catch (e) {
+      this.onTrelloError(e);
+      return;
+    }
+    this.listsSelect.selectedIndex = 1;
+    this.addBugEnabled = true;
+  },
+
+  async parseLink(tabUrl) {
+    const url = new URL(tabUrl);
+    for (let provider of providers) {
+      if (await provider.matches(url)) {
+        try {
+          return await provider.parse(url);
+        } catch (e) {
+          throw new Error(`Error in provider "${provider.name}" while parsing:`, e);
+        }
+      }
+    }
+    throw new Error("Could not find a suitable provider.");
+  },
+
+  createTrelloCard(listId, name, desc) {
+    return new Promise((resolve, reject) => {
+      Trello.post("cards", {
+        name,
+        desc,
+        idList: listId,
+        success: resolve,
+        error: reject
+      });
+    });
+  },
+
+  async populateLists(boardId) {
+    return this._populateBoardsOrLists(this.listsSelect, `boards/${boardId}/lists`);
+  },
+
+  async populateBoards() {
+    return this._populateBoardsOrLists(this.boardsSelect, "/members/me/boards?filter=open");
+  },
+
+  async _populateBoardsOrLists(select, url) {
+    let boardsOrLists = await new Promise((resolve, reject) => {
+      Trello.get(url, resolve, reject);
+    });
+    for (let boardOrList of boardsOrLists) {
+      let option = document.createElement("option");
+      option.value = boardOrList.id;
+      option.text = boardOrList.name;
+      select.appendChild(option);
+    }
+  },
+
+  showSuccessNotification(cardTitle) {
+    this._showNotification("Bug card added!", cardTitle);
+  },
+
+  onBugParsingError(error) {
+    this._logError(error, "Can't send this to Trello, it doesn't look like a bug.");
+  },
+
+  onTrelloError(error) {
+    this._logError(error, "Error communicating with Trello, check the extension console for more information.");
+  },
+
+  _logError(error, userMessage) {
+    console.error(error);
+    this._showNotification("Error", userMessage);
+  },
+
+  _showNotification(title, message) {
+    browser.notifications.create(null, {
+      "type": "basic",
+      "iconUrl": browser.extension.getURL("icons/icon-32.png"),
+      "title": title,
+      "message": message
+    });
+  },
+
+  trelloLogout() {
+    this.loggedIn = false;
+    this._purgeSelect(this.listsSelect);
+    this._purgeSelect(this.boardsSelect);
+    this.addBugEnabled = false;
     Trello.deauthorize();
-    $('#loggedin').hide();
-    $('#loggedout').show();
-    $('#lists_list').find('option').remove();
-    $('#lists_list').append('<option>Select a list</option>');
-    $('#board_list').find('option').remove();
-    $('#board_list').append('<option>Select a board</option>');
-    $("#add-bug").removeClass("btn-primary");
-    $("#add-bug").addClass("disabled");
-}
+  },
 
-function addGithub(url) {
-    var path = url.pathname.split('/');
-    var bugNum = path[path.length - 1];
-    var bugOwner = path[1];
-    var bugRepo = path[2];
-    var type = 'Unkown'
-    if (url.pathname.indexOf('issues') > -1) {
-        type = 'Issue';
+  _purgeSelect(select) {
+    for (let option of [...select.options]) {
+      // Keep the first option
+      if (!option.hasAttribute("disabled")) {
+        select.removeChild(option);
+      }
     }
-    else if (url.pathname.indexOf('pull') > -1) {
-        type = 'Pull';
-    }
-    var bugJson = $.ajax({
-        type: "Get",
-        url: url,
-        dataType: "html",
-        success: function (data) {
-            var prefix = bugRepo + ": #" + bugNum
-            var body = $(data).filter('meta[name="description"]').attr("content");
-            var title = $(data).find('.js-issue-title').text();
-            title = title + " (" + type + ")"
-            addCard(prefix, title, body, url)
-        },
-        error: function () {
-            $('#error').show();
-        }
-    });
-}
+    select.selectedIndex = 0;
+  },
 
-function addBitbucket(url) {
-    var path = url.pathname.split('/');
-    var bugNum = path[4];
-    var bugOwner = path[1];
-    var bugRepo = path[2];
-    var bugUrl = "https://bitbucket.org/api/1.0/repositories/" + bugOwner + "/" + bugRepo + "/" + "issues/" + bugNum
-    bugJson = $.ajax({
-        type: "Get",
-        url: bugUrl,
-        dataType: "json",
-        success: function (data) {
-            var num = bugRepo + ": #" + data.local_id
-            addCard(num, data.title, data.content, url)
-        },
-        error: function () {
-            $('#error').show();
-        }
-    });
-}
-
-function addGoogle(url) {
-    var path = url.pathname.split('/');
-    var bugNum = url.search.split('id=').slice(-1)[0];
-    var bugProj = path[2];
-    var bugUrl = "https://code.google.com/feeds/issues/p/" + bugProj + "/issues/full?id=" + bugNum
-    var bugJson = $.ajax({
-        type: "Get",
-        url: bugUrl,
-        crossDomain: true,
-        dataType: "xml",
-        success: function (data) {
-            desc = $(data).find('content').text();
-            title = $(data).find("entry").find('title').text();
-            var num = bugProj + ": #" + bugNum;
-            addCard(num, title, desc, url);
-        },
-        error: function () {
-            $('#error').show();
-        }
-    });
-}
-
-function addLaunchpad(url, type) {
-    if (type == "Bug") {
-        var path = url.pathname.split('+bug/').slice(-1)[0];
-        var bugNum = path.split('/')[0];
-        var bugUrl = "https://api.launchpad.net/1.0/bugs/" + bugNum
-        var bugJson = $.ajax({
-            type: "Get",
-            url: bugUrl,
-            crossDomain: true,
-            dataType: "json",
-            success: function (data) {
-                var num = "LP: #" + data.id
-                addCard(num, data.title, data.description, data.web_link)
-            },
-            error: function () {
-                $('#error').show();
-            }
-        });
-    }
-    else if (type = "Merge") {
-        var bugJson = $.ajax({
-            type: "Get",
-            url: url,
-            crossDomain: true,
-            dataType: "html",
-            success: function (data) {
-                var body = $(data).filter('meta[name="description"]').attr("content");
-                var title = $(data).find('.context-publication h1').text();
-                addCard('', title, body, url)
-            },
-            error: function () {
-                $('#error').show();
-            }
-        });
-    }
-}
-
-function addSourceforge(url) {
-    var path = url.pathname.split('/');
-    var bugNum = path[4];
-    var bugType = path[3];
-    var bugProject = path[2];
-    var bugUrl = "https://sourceforge.net/rest/p/" + bugProject + "/" + bugType + "/"+ bugNum
-    var bugJson = $.ajax({
-        type: "Get",
-        url: bugUrl,
-        crossDomain: true,
-        dataType: "json",
-        success: function (data) {
-            var num = "SF: #" + data.ticket.ticket_num
-            var url = "https://sourceforge.net/p/" + bugProject + "/" + bugType + "/"+ bugNum
-            addCard(num, data.ticket.summary, data.ticket.description, url)
-        },
-        error: function () {
-            $('#error').show();
-        }
-    });
-}
-
-function addDebianBTS(url) {
-    var bugNum = url.search.split('bug=').slice(-1)[0];
-    var bugJson = $.ajax({
-        type: "Get",
-        url: url,
-        crossDomain: true,
-        dataType: "html",
-        success: function (data) {
-            // Get title, removing the trailing " - Debian Bug report"
-            var title = $(data).filter('title').text().slice(0, -25);
-            var desc = $(data).filter('.message').eq(0).text();
-            addCard("BTS", title, desc, url);
-        },
-        error: function () {
-            $('#error').show();
-        }
-    });
-}
-
-function addBugzilla(url) {
-    var bugNum = url.search.split('id=').slice(-1)[0];
-    var bugOrg = url.hostname.split('.')[1]
-    var bugPrefix = url.href.split('show_bug.cgi')[0]
-    var bugUrl = bugPrefix + "/jsonrpc.cgi?method=Bug.get&params=[{\"ids\":[" + bugNum + "]}]"
-    var bugJson = $.ajax({
-        type: "Get",
-        url: bugUrl,
-        crossDomain: true,
-        dataType: "json",
-        success: function (data) {
-            var bugJson = data.result.bugs["0"];
-            var num = bugOrg + ": #" + bugJson.id;
-            addCard(num, bugJson.summary, "", url);
-        },
-        error: function () {
-            $('#error').show();
-        }
-    });
-}
-
-function parseLink(tablink) {
-    var parser = document.createElement('a');
-    parser.href = tablink;
-    if(parser.hostname == 'bugs.launchpad.net' && (parser.pathname.indexOf('+bug') > -1)) {
-        addLaunchpad(parser, "Bug");
-    }
-    else if (parser.hostname == 'code.launchpad.net' && (parser.pathname.indexOf('+merge') > -1)) {
-        addLaunchpad(parser, "Merge");
-    }
-    else if(parser.hostname == 'github.com') {
-        if (parser.pathname.indexOf('issues') > -1) {
-            addGithub(parser, 'Issue');
-        }
-        else if (parser.pathname.indexOf('pull') > -1) {
-            addGithub(parser, 'Pull');
-        }
-    }
-    else if(parser.hostname == 'bitbucket.org' && (parser.pathname.indexOf('issue') > -1)) {
-        addBitbucket(parser);
-    }
-    else if(parser.hostname == 'sourceforge.net' && (parser.pathname.indexOf('bugs') > -1 || parser.pathname.indexOf('feature-requests') > -1)) {
-        addSourceforge(parser);
-    }
-    else if(parser.pathname.indexOf('show_bug.cgi') > -1) {
-        addBugzilla(parser);
-    }
-    else if(parser.hostname == 'code.google.com' && (parser.pathname.indexOf('detail') > -1)) {
-        addGoogle(parser);
-    }
-    else if(parser.hostname == 'bugs.debian.org' && (parser.pathname.indexOf('bugreport.cgi') > -1)) {
-        addDebianBTS(parser);
-    }
-    else {
-        $.ajax({
-            type: "Get",
-            url: tablink,
-            dataType: "html",
-            success: function (data) {
-                var og_site_name = $(data).filter('meta[property="og:site_name"]').attr("content");
-                if(og_site_name == 'GitHub Enterprise') {
-                    addGithub(parser);
-                } else {
-                    $('#error').show();
-                }
-            },
-            error: function () {
-                $('#error').show();
-            }
-        });
-    }
-}
-
-function addClicked() {
-    chrome.tabs.getSelected(null,function(tab) {
-        var tablink = tab.url;
-        parseLink(tablink)
-    });
-}
-
-function closePopup() {
-    // Close popup and open auth tab
+  openTrelloLoginPage() {
     setTimeout(function() {
-        window.close();
-        chrome.tabs.create({url: chrome.extension.getURL('options/settings.html')});
+      let url = browser.extension.getURL("options/settings.html");
+      browser.tabs.create({url});
+      window.close();
     }, 100);
-}
+  },
 
-function init() {
-    if(!localStorage.trello_token) {
-        closePopup();
-        return;
+  openTrello() {
+    let boardId = this.selectedBoardId;
+    let pageToOpen;
+    if (boardId) {
+      pageToOpen = `https://trello.com/board/${boardId}`;
+    } else {
+      pageToOpen = "https://www.trello.com";
     }
-    else {
-        Trello.authorize({
-            interactive:false,
-            success: onAuthorize
-        });
-    }
-}
+    browser.tabs.create({
+      url: pageToOpen
+    });
+  }
+};
 
-window.addEventListener('load', init);
-
-document.addEventListener('DOMContentLoaded', function () {
-    $("#disconnect").click(logout);
-    $("#connect").click(init);
-    $("#board_list").change(boardSelected);
-    $("#add-bug").click(addClicked);
+document.addEventListener("DOMContentLoaded", () => {
+  new Bug2TrelloPopup();
 });
