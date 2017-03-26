@@ -1,3 +1,5 @@
+/* global __dirname:true */
+
 module.exports = {
   entry: {
     options: "./options/options.js",
