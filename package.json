@@ -8,6 +8,7 @@
   "dependencies": {
     "expose-loader": "^0.7.3",
     "jquery": "^3.2.1",
+    "webextension-polyfill": "^0.1.1",
     "webpack": "^2.3.2"
   },
   "repository": {
