@@ -2,9 +2,11 @@
   "name": "bug2trello",
   "version": "1.0.0",
   "scripts": {
-    "build": "webpack",
+    "build": "npm run lint && webpack",
     "dev": "webpack --watch",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "package": "npm run build && npm run zip",
+    "zip": "zip -r bug2trello.zip addon -x '*.DS_Store' -x '*.gitignore'"
   },
   "dependencies": {
     "eslint": "^3.18.0",
