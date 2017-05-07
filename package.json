@@ -4,7 +4,7 @@
   "scripts": {
     "build": "npm run lint && webpack",
     "dev": "webpack --watch",
-    "lint": "eslint .",
+    "lint": "eslint --debug .",
     "package": "npm run build && npm run zip",
     "zip": "zip -r bug2trello.zip addon -x '*.DS_Store' -x '*.gitignore'"
   },
