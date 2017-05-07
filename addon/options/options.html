@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bug 2 Trello</title>
+  <script src="../vendor/index.js"></script>
+  <script src="../vendor/browser-polyfill.js"></script>
+  <script src="https://api.trello.com/1/client.js?key=7ef8f6a93120e0f5411093164e59ef1d"></script>
+  <script src="index.js"></script>
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+  <div id="content">
+    <div id="header">
+      <div id="logo"></div>
+      <h2 id="appname">Bug 2 Trello</h2>
+    </div>
+    <div id="main">
+      <div id="login-status" data-status="">
+        <div id="loggedin">
+          <p>
+            <strong>Awesome!</strong> You're logged in to Trello as <span id="trelloFullName"></span> --
+            <a id="disconnect" href="#" class="btn-link">Log Out</a>
+          </p>
+        </div>
+        <div id="loggedout">
+          <p>You have been disconnected from Trello. <a id="connect" href="#" class="btn-link">Connect To Trello</a></p>
+        </div>
+        <div id="loginerror">
+          <h1>Uh oh.</h1>
+          <p>Looks like something has gone wrong authorising you with Trello.</p>
+          <p>Please try checking your Internet connection.</p>
+        </div>
+      </div>
+
+      <div id="about">
+        <h2> Thanks for trying Bug 2 Trello!</h2>
+        <p>Bug 2 Trello is a browser extension to add bugs/issues to a Trello board. You probably already know this if you've gotten this far.</p>
+        <p>It currently supports Launchpad, GitHub, SourceForge, BitBucket, Debian's BTS, and some Bugzilla instances.</p>
+        <p><span class="tip">Tip</span> When a board is selected, the "Go to Trello" button in the popup will take you directly to that board.</p>
+
+        <h3 id="feedback">We love feedback and patches!</h3>
+        <p>Bug 2 Trello is open source software. It is released under the <a href="http://opensource.org/licenses/MIT">MIT license</a>.</p>
+        <p>The code is available on <a href="https://github.com/andrewsomething/bug2trello">GitHub</a>, and you can <a href="https://github.com/andrewsomething/bug2trello/issues">report bugs</a> there.</p>
+        <div id="review-links" data-browser="">
+          <p id="chrome-review">Leave a <a href="https://chrome.google.com/webstore/detail/bug-2-trello/aomnoofmdnaccffobkddehcmdihggcke/reviews">review in the Chrome store</a>.</p>
+          <!-- TODO: Fix link once addon published -->
+          <p id="firefox-review">Leave a <a href="https://addons.mozilla.org/search/?q=bug+2+trello">review on the Firefox Add-ons website</a>.</p>
+        </div>
+      </div>
+    </div>
+    <div id="footer">
+      Built by <a href="https://github.com/andrewsomething">Andrew Starr-Bochicchio</a> and <a href="https://github.com/eoger">Edouard Oger</a>.
+    </div>
+  </div>
+</body>
+</html>

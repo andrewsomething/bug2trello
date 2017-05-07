@@ -1,9 +1,9 @@
 Bug 2 Trello
 ==========
 
-A Chrome extension to add bugs/issues to a Trello board.
+A browser extension to add bugs/issues to a Trello board.
 
-It currently supports Launchpad, GitHub, SourceForge, Google Code, BitBucket, and Debian's BTS.
+It currently supports Launchpad, GitHub, SourceForge, BitBucket, and Debian's BTS.
 
 There is also support for some Bugzilla instances. This support currently requires that the JSON-RPC interface is available.
 

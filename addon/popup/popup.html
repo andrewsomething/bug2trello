@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bug 2 Trello</title>
+  <script src="../vendor/index.js"></script>
+  <script src="https://api.trello.com/1/client.js?key=7ef8f6a93120e0f5411093164e59ef1d"></script>
+  <script src="index.js"></script>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div id="content">
+    <div id="header">
+      <div id="logo"></div>
+      <h2 id="appname">Bug 2 Trello</h2>
+    </div>
+    <div id="main">
+      <select id="boards">
+        <option value="" selected disabled>Select a board</option>
+      </select>
+      <select id="lists">
+        <option selected disabled>Select a list</option>
+      </select>
+      <button id="add-bug" type="button" disabled>Add to Trello</button>
+    </div>
+    <div id="footer" data-loggedin="true">
+      <div id="footer-left-btn">
+        <button id="trello-link" type="button">Go to Trello</button>
+      </div>
+      <div id="footer-right-btn">
+        <button id="connect" type="button">Connect To Trello</button>
+        <button id="disconnect" type="button">Log Out</button>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
