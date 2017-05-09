@@ -159,7 +159,7 @@ Bug2TrelloPopup.prototype = {
   },
 
   onBugParsingError(error) {
-    this._logError(error, "Can't send this to Trello, it doesn't look like a bug.");
+    this._logError(error, "Unable to add this item to Trello. It doesn't look like a bug.");
   },
 
   onTrelloError(error) {
