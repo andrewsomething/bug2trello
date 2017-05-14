@@ -2,13 +2,13 @@
 
 module.exports = {
   entry: {
-    options: "./options/options.js",
-    popup: "./popup/popup.js",
+    options: "./src/options/options.js",
+    popup: "./src/popup/popup.js",
     vendor: ["jquery"]
   },
   output: {
     filename: "[name]/index.js",
-    path: `${__dirname}/addon`
+    path: `${__dirname}/dist`
   },
   module: {
     rules: [{

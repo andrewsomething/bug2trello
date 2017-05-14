@@ -1,3 +1,3 @@
-addon/options/index.js
-addon/popup/index.js
-addon/vendor
+dist/options/index.js
+dist/popup/index.js
+dist/vendor
