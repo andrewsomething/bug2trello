@@ -1,5 +1,5 @@
 const browser = require("webextension-polyfill");
-const providers = require("./providers/");
+const providers = require("../providers/");
 
 function Bug2TrelloPopup() {
   this.setupListeners();

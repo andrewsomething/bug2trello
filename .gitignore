@@ -4,3 +4,4 @@ key.pem
 node_modules
 npm-debug.log
 bug2trello.zip
+dist/
