@@ -20,6 +20,6 @@ Development
 -----------
 
 * Install the dependencies using: `npm install`
-* Build the extension with: `npm run `
+* Build the extension with: `npm run build`
 * The `dist/` directory will contain the unpacked extension.
 * Running `npm run package` will produce a packaged extension in `./bug2trello.zip`
