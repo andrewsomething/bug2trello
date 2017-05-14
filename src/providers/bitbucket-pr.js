@@ -10,7 +10,7 @@ module.exports = {
     let bugNum = path[4];
     let bugOwner = path[1];
     let bugRepo = path[2];
-    let bugUrl = `https://bitbucket.org/api/2.0/repositories/${bugOwner}/${bugRepo}/pullrequests/${bugNum}`;
+    let bugUrl = `https://bitbucket.org/api/2.0/repositories/${bugOwner}/${bugRepo}/pullrequests/${bugNum}?fields=id,title,description`;
 
     let body = await fetch(bugUrl).then(data => data.json());
 

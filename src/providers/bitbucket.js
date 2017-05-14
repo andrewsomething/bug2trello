@@ -10,15 +10,15 @@ module.exports = {
     let bugNum = path[4];
     let bugOwner = path[1];
     let bugRepo = path[2];
-    let bugUrl = `https://bitbucket.org/api/1.0/repositories/${bugOwner}/${bugRepo}/issues/${bugNum}`;
+    let bugUrl = `https://bitbucket.org/api/2.0/repositories/${bugOwner}/${bugRepo}/issues/${bugNum}?fields=id,title,description`;
 
     let body = await fetch(bugUrl).then(data => data.json());
 
-    let prefix = `${bugRepo}: #${body.local_id}`;
+    let prefix = `${bugRepo}: #${body.id}`;
     return {
       prefix,
       title: body.title,
-      description: body.content,
+      description: body.description,
       link: url.href
     };
   }
