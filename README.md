@@ -7,7 +7,7 @@ It currently supports Launchpad, GitHub, SourceForge, BitBucket, and Debian's BT
 
 There is also support for some Bugzilla instances. This support currently requires that the JSON-RPC interface is available.
 
-It is known to work with with Wikimedia, Mozilla, KDE, Apache, and Redhat.
+It is known to work with with Mozilla, KDE, Apache, and Redhat.
 It is known *not* to work with GNOME, Kernel.org, and Novell.
 
 - Install it from the Chrome Store: https://chrome.google.com/webstore/detail/bug2trello/aomnoofmdnaccffobkddehcmdihggcke
