@@ -1,5 +1,6 @@
 module.exports = [
   require("./bitbucket"),
+  require("./bitbucket-pr"),
   require("./bugzilla"),
   require("./debian"),
   require("./github"),
