@@ -20,7 +20,7 @@ module.exports = {
     return {
       prefix,
       title,
-      description: "",
+      description: body.body,
       link: body.html_url
     };
   }
