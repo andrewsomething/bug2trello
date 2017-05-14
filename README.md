@@ -15,3 +15,11 @@ It is known *not* to work with GNOME, Kernel.org, and Novell.
 - Grab the code: `git clone git://github.com/andrewsomething/bug2trello.git`
 
 Bug 2 Trello is licensed under the MIT License.
+
+Development
+-----------
+
+* Install the dependencies using: `npm install`
+* Build the extension with: `npm run `
+* The `dist/` directory will contain the unpacked extension.
+* Running `npm run package` will produce a packaged extension in `./bug2trello.zip`
