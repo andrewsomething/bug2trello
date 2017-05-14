@@ -2,7 +2,7 @@ module.exports = {
   name: "Bitbucket",
 
   async matches(url) {
-    return url.hostname == "bitbucket.org" && url.pathname.includes("issues");
+    return url.hostname == "bitbucket.org" && url.pathname.includes("pull-requests");
   },
 
   async parse(url) {
@@ -10,7 +10,7 @@ module.exports = {
     let bugNum = path[4];
     let bugOwner = path[1];
     let bugRepo = path[2];
-    let bugUrl = `https://bitbucket.org/api/2.0/repositories/${bugOwner}/${bugRepo}/issues/${bugNum}?fields=id,title,description`;
+    let bugUrl = `https://bitbucket.org/api/2.0/repositories/${bugOwner}/${bugRepo}/pullrequests/${bugNum}?fields=id,title,description`;
 
     let body = await fetch(bugUrl).then(data => data.json());
 

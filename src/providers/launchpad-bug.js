@@ -12,7 +12,7 @@ module.exports = {
 
     let body = await fetch(bugUrl).then(data => data.json());
 
-    let prefix = `LPP: #${body.id}`;
+    let prefix = `LP: #${body.id}`;
     return {
       prefix,
       title: body.title,
