@@ -7,21 +7,23 @@ module.exports = {
 
   async parse(url) {
     let path = url.pathname.split("/");
-    let bugNumber = path[path.length - 1];
-    let owner = path[1];
-    let repo = path[2];
-    let bugUrl = `https://api.github.com/repos/${owner}/${repo}/issues/${bugNumber}`;
+    let bugNum = path[path.length - 1];
+    let bugRepo = path[2];
+    let type = url.pathname.includes("pull") ? "PR" : "Issue";
+    let prefix = `${bugRepo}: #${bugNum}`;
 
-    let body = await fetch(bugUrl).then(data => data.json());
+    let html = await fetch(url.href, { credentials: "include" }).then(data => data.text());
+    let domParser = new DOMParser();
+    let doc = domParser.parseFromString(html, "text/html");
 
-    let prefix = `${repo}: #${bugNumber}`;
-    let type = body.pull_request ? "PR" : "Issue";
-    let title = `${body.title} (${type})`;
+    let title = doc.querySelector(".js-issue-title").textContent.trim();
+    let description = doc.querySelector(".comment-body:first-child").textContent.trim();
+    title = `${title} (${type})`;
     return {
       prefix,
       title,
-      description: body.body,
-      link: body.html_url
+      description,
+      link: url.href
     };
   }
 };

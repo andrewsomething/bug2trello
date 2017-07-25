@@ -12,7 +12,7 @@ module.exports = {
     let bugRepo = path[2];
     let bugUrl = `https://bitbucket.org/api/2.0/repositories/${bugOwner}/${bugRepo}/issues/${bugNum}?fields=id,title,description`;
 
-    let body = await fetch(bugUrl).then(data => data.json());
+    let body = await fetch(bugUrl, { credentials: "include" }).then(data => data.json());
 
     let prefix = `${bugRepo}: #${body.id}`;
     return {

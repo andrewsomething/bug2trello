@@ -10,7 +10,7 @@ module.exports = {
     let bugNum = path.split("/")[0];
     let bugUrl = `https://api.launchpad.net/1.0/bugs/${bugNum}`;
 
-    let body = await fetch(bugUrl).then(data => data.json());
+    let body = await fetch(bugUrl, { credentials: "include" }).then(data => data.json());
 
     let prefix = `LP: #${body.id}`;
     return {

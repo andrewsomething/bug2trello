@@ -6,7 +6,7 @@ module.exports = {
   },
 
   async parse(url) {
-    let html = await fetch(url.href).then(data => data.text());
+    let html = await fetch(url.href, { credentials: "include" }).then(data => data.text());
     let domParser = new DOMParser();
     let doc = domParser.parseFromString(html, "text/html");
 

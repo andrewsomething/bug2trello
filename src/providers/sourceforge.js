@@ -12,7 +12,7 @@ module.exports = {
     let bugProject = path[2];
     let bugUrl = `https://sourceforge.net/rest/p/${bugProject}/${bugType}/${bugNum}`;
 
-    let body = await fetch(bugUrl).then(data => data.json());
+    let body = await fetch(bugUrl, { credentials: "include" }).then(data => data.json());
 
     let prefix = `SF: #${ body.ticket.ticket_num}`;
     let webLink = `https://sourceforge.net/p/${bugProject}/${bugType}/${bugNum}`;

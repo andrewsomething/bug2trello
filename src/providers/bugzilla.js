@@ -6,20 +6,21 @@ module.exports = {
   },
 
   async parse(url) {
-    let bugNum = url.search.split("id=").slice(-1)[0];
+    let bugNum = url.searchParams.get("id");
     let bugOrg = url.hostname.split(".")[1];
-    let bugPrefix = url.href.split("show_bug.cgi")[0];
-    let bugUrl = `${bugPrefix}/jsonrpc.cgi?method=Bug.get&params=[{"ids":[${bugNum}]}]`;
 
-    let body = await fetch(bugUrl).then(data => data.json());
+    let html = await fetch(url.href, { credentials: "include" }).then(data => data.text());
+    let domParser = new DOMParser();
+    let doc = domParser.parseFromString(html, "text/html");
 
-    let bugJson = body.result.bugs["0"];
-    let prefix = `${bugOrg}: #${bugJson.id}`;
-    let title = body.result.bugs["0"].summary;
+    let prefix = `${bugOrg}: #${bugNum}`;
+    // Second selector is for bugzilla.mozilla.org
+    let title = doc.querySelector("#short_desc_nonedit_display, #field-value-short_desc").textContent;
+    let description = doc.querySelector(".bz_first_comment .bz_comment_text, #ct-0").textContent;
     return {
       prefix,
       title,
-      description: "",
+      description,
       link: url.href
     };
   }
